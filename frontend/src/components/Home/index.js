@@ -17,6 +17,7 @@ const Home = () => {
             setData(newData)
             console.log(data)
         })
+        // eslint-disable-next-line
     }, [])
 
     return (
