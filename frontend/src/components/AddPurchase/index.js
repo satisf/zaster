@@ -1,67 +1,57 @@
-import React from "react";
-import {FormControl, TextField, Button} from "@material-ui/core";
-import {Link} from 'react-router-dom'
+import React, {useState} from "react"
+import {FormControl, TextField, Button} from "@material-ui/core"
+import {Link, useHistory} from 'react-router-dom'
 
-const fields = [
-    {
-        name: "productName",
-        type: "text",
-        label: "was hast du gekauft? "
-    },
-    {
-        name: "price",
-        type: "number",
-        label: "was hast du bezahlt? "
-    },
-    {
-        name: "shopName",
-        type: "text",
-        label: "in welchem Laden?"
-    },
-    {
-        name: "location",
-        type: "button",
-        label: "aktuelle Position hinzufügen"
-    },
-    {
-        name: "gtinCode",
-        type: "button",
-        label: "den Produkt Code Scannen"
-    },
-    {
-        name: "category",
-        type: "text",
-        label: "zu welcher Kategorie gehört der Kauf? "
-    },
-    {
-        name: "emotion",
-        type: "string",
-        label: "was hast du dabei gefühlt? "
-    },
-    {
-        name: "dateOfPurchase",
-        type: "date",
-        label: "wann war der Kauf?"
-    }
-]
 
-const textField = ({name, type, label}) => {
-    return <TextField name={name} type={type} label={label} />
-}
 
 const AddPurchase = () => {
+
+    const [productName, setProductName] = useState("")
+    const [price, setPrice] = useState(0)
+    const [shopName, setShopName] = useState("")
+
+    let history = useHistory()
+
+    const submitPurchase = () => {
+        fetch('api/purchase', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                productName,
+                price,
+                shop: {name: shopName}
+            })
+        }).then(()=> {
+            history.push('/')
+        })
+    }
+
     return (
         <div>
-            <Link to="/">zurück</Link>
+            <Link to="/"><Button>zurück</Button></Link>
             <FormControl>
-                {fields.map(field => {
-                    switch(field.type){
-                        case "button":
-                            return <Button>{field.label}</Button>
-                        default:
-                            return textField(field)
-                    }
-                })}
+                <TextField
+                    name="productName"
+                    type="text"
+                    label="Produktname"
+                    value={productName}
+                    onChange={(event => setProductName(event.target.value))}/>
+                <TextField
+                    name="price"
+                    type="number"
+                    label="Preis"
+                    value={price}
+                    onChange={(event => setPrice(event.target.value))}/>
+                <TextField
+                    name="shopName"
+                    type="text"
+                    label="Laden"
+                    value={shopName}
+                    onChange={(event => setShopName(event.target.value))}/>
+                    <Button onClick={()=>submitPurchase()}>eintragen</Button>
             </FormControl>
         </div>
     )

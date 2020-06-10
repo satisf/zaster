@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button} from "@material-ui/core"
+import {Button, Card, CardContent} from "@material-ui/core"
 import {Link} from "react-router-dom"
 
 const Home = () => {
@@ -8,8 +8,7 @@ const Home = () => {
 
     const fetchData = async () =>{
         const response = await fetch('/api/purchases')
-        const body = await response.json()
-        return body
+        return await response.json()
     }
 
     useEffect(() => {
@@ -26,7 +25,15 @@ const Home = () => {
                 <Button>neuen Kauf hinzufügen</Button>
             </Link>
             {data.map(purchase => {
-                return <p>{JSON.stringify(purchase)}</p>
+                return (
+                    <Card>
+                        <CardContent>
+                            <p>{purchase?.productName && purchase.productName}</p>
+                            <p>{purchase?.price && purchase.price}</p>
+                            <p>{purchase?.shop?.name && purchase.shop.name}</p>
+                        </CardContent>
+                    </Card>
+                )
             })}
         </div>
     )
