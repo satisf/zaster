@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server/server.ts",
   "scripts": {
-    "start": "yarn build && cd dist && cross-env PORT=5000 node server/server.js",
+    "start": "yarn build && nohup cross-env PORT=5000 node dist/server/server.js &",
     "develop": "cross-env PORT=5000 ENV=DEV nodemon",
     "build": "tsc"
   },

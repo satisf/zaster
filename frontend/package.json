@@ -17,7 +17,7 @@
   "scripts": {
     "develop": "cross-env PORT=5001 react-scripts start",
     "build": "react-scripts build",
-    "start": "yarn build && cd build && serve -l 5001",
+    "start": "yarn build && cd build && nohup serve -l 5001 &",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
