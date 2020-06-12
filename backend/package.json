@@ -4,16 +4,15 @@
   "description": "",
   "main": "src/server/server.ts",
   "scripts": {
-    "start": "node --inspect=5858 -r ts-node/register ./src/server/server.ts",
-    "dev": "nodemon",
-    "compile": "tsc",
-    "bundle": "webpack",
-    "script": "cd src/scripts && ts-node"
+    "start": "yarn build && cd dist && cross-env PORT=5000 node server/server.js",
+    "develop": "cross-env PORT=5000 ENV=DEV nodemon",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cross-env": "^7.0.2",
     "express": "^4.17.1",
     "mongoose": "^5.9.17",
     "typescript": "^3.9.5"
