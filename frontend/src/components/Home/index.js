@@ -24,9 +24,9 @@ const Home = () => {
             <Link to="/add">
                 <Button>neuen Kauf hinzufügen</Button>
             </Link>
-            {data.map(purchase => {
+            {data.map((purchase, idx) => {
                 return (
-                    <Card>
+                    <Card key={purchase?.productName + idx}>
                         <CardContent>
                             <p>{purchase?.productName && purchase.productName}</p>
                             <p>{purchase?.price && purchase.price}</p>

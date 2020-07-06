@@ -1,11 +1,14 @@
 import React from 'react';
 import './App.css';
 import Router from './components/Router'
+import {DataProvider} from './provider/DataProvider'
 
 function App() {
   return (
     <div className="App">
-      <Router />
+        <DataProvider>
+            <Router />
+        </DataProvider>
     </div>
   );
 }
