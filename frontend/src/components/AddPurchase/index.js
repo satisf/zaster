@@ -1,12 +1,13 @@
 import React, {useContext, useState} from "react"
 import {FormControl, TextField, Button} from "@material-ui/core"
 import {Link, useHistory} from 'react-router-dom'
-import {DataContext} from '../../provider/DataProvider'
+import {DataContext, DataActions} from '../../provider/DataProvider'
 
 
 const AddPurchase = () => {
 
-    let data = useContext(DataContext)
+    const data = useContext(DataContext)
+    const dataActions = useContext(DataActions)
 
     const [productName, setProductName] = useState("")
     const [price, setPrice] = useState(0)
@@ -16,13 +17,7 @@ const AddPurchase = () => {
     let history = useHistory()
 
     const submitPurchase = () => {
-        fetch('api/purchase', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+        dataActions.addPurchase({
                 productName,
                 price,
                 shop: {
@@ -33,9 +28,7 @@ const AddPurchase = () => {
                     }
                 }
             })
-        }).then(()=> {
             history.push('/')
-        })
     }
 
     const getLocation = () => {

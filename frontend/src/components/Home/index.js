@@ -1,23 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext} from "react";
 import {Button, Card, CardContent} from "@material-ui/core"
 import {Link} from "react-router-dom"
+import {DataContext} from '../../provider/DataProvider'
 
 const Home = () => {
 
-    const [data, setData] = useState([])
-
-    const fetchData = async () =>{
-        const response = await fetch('/api/purchases')
-        return await response.json()
-    }
-
-    useEffect(() => {
-        fetchData().then(newData => {
-            setData(newData)
-            console.log(data)
-        })
-        // eslint-disable-next-line
-    }, [])
+    const data = useContext(DataContext)
 
     return (
         <div>
