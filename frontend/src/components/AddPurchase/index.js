@@ -33,10 +33,6 @@ const AddPurchase = () => {
         getLocation()
     }, [])
 
-    useEffect(() => {
-        console.log(shopName)
-    }, [shopName])
-
     const getLocation = () => {
         navigator.geolocation.getCurrentPosition(
             pos => {
@@ -68,7 +64,6 @@ const AddPurchase = () => {
                     Number.MAX_SAFE_INTEGER
                 return {distance, purchase}
             }).sort((a, b) => a.distance - b.distance)
-            console.log(('sorted', sortedPurchases))
             if(sortedPurchases[0].distance <= ALLOWED_DISTANCE){
                 setShopName(sortedPurchases[0].purchase.shop.name)
         }
