@@ -2,6 +2,7 @@ import React, {useContext} from "react";
 import {Button, Card, CardContent} from "@material-ui/core"
 import {Link} from "react-router-dom"
 import {DataContext} from '../../provider/DataProvider'
+import {EMOTIONS} from "../AddPurchase";
 
 const Home = () => {
 
@@ -18,6 +19,7 @@ const Home = () => {
                         <CardContent>
                             <p>{purchase?.productName && purchase.productName}</p>
                             <p>{purchase?.price && purchase.price}</p>
+                            <p>{purchase?.emotion && EMOTIONS.filter(emo => emo.name === purchase.emotion)[0].emoji}</p>
                             <p>{purchase?.shop?.name && purchase.shop.name}</p>
                         </CardContent>
                     </Card>

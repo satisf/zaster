@@ -1,8 +1,32 @@
 import React, {useContext, useEffect, useState} from "react"
-import {FormControl, TextField, Button} from "@material-ui/core"
+import {FormControl, TextField, Button, ButtonGroup} from "@material-ui/core"
 import {Link, useHistory} from 'react-router-dom'
 import {DataContext, DataActions} from '../../provider/DataProvider'
+import happySound from './happySound.mp3'
+import neutralSound from './neutralSound.mp3'
+import sadSound from './sadSound.mp3'
 
+
+export const EMOTIONS = [
+    {
+        name: 'happy',
+        displayName: 'fröhlich',
+        sound: new Audio(happySound),
+        emoji: '😊'
+    },
+    {
+        name: 'neutral',
+        displayName: 'neutral',
+        sound: new Audio(neutralSound),
+        emoji: '😐'
+    },
+    {
+        name: 'sad',
+        displayName: 'traurig',
+        sound: new Audio(sadSound),
+        emoji: '😢'
+    }
+]
 
 const AddPurchase = () => {
 
@@ -14,6 +38,9 @@ const AddPurchase = () => {
     const [price, setPrice] = useState(0)
     const [shopName, setShopName] = useState("")
     const [location, setLocation] = useState({})
+    const [emotion, setEmotion] = useState('')
+
+
 
     let history = useHistory()
 
@@ -21,6 +48,7 @@ const AddPurchase = () => {
         dataActions.addPurchase({
                 productName,
                 price,
+                emotion,
                 shop: {
                     name: shopName,
                     location
@@ -71,6 +99,11 @@ const AddPurchase = () => {
         }
     }
 
+    const emotionClick = emotion => {
+        setEmotion(emotion.name)
+        emotion.sound.play()
+    }
+
 
     return (
         <div>
@@ -94,6 +127,9 @@ const AddPurchase = () => {
                     label="Laden"
                     value={shopName}
                     onChange={(event => setShopName(event.target.value))}/>
+                <ButtonGroup color="primary" aria-label="outlined primary button group">
+                    {EMOTIONS.map((emo => (<Button onClick={() => emotionClick(emo)} disableElevation={emo.name !== emotion}>{emo.emoji}</Button>)))}
+                </ButtonGroup>
                     <Button onClick={()=>submitPurchase()}>eintragen</Button>
             </FormControl>
             <Button onClick={findShopByLocation}>Laden durch Position finden</Button>
