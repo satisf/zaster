@@ -18,14 +18,12 @@ export const DataProvider = ({children}) => {
 
     useEffect(() => {
             fetchData().then(newData => {
+                let newCategories = new Set()
                 setPurchases(newData)
                 newData.forEach(purchase => {
-                console.log('DP import', purchase)
-                    if(purchase.category && categories.indexOf(purchase.category) < 0){
-
-                        setCategories([...categories, purchase.category])
-                    }
+                    purchase.category && newCategories.add(purchase.category)
                 })
+                setCategories([...newCategories])
             })
             // eslint-disable-next-line
         }, [])
@@ -42,14 +40,7 @@ export const DataProvider = ({children}) => {
         })
     }, [purchases])
 
-    useEffect(() => {
-        console.log('DataProvider: categories', categories)
-    }, [categories])
-
     const addCategory = newCat => setCategories([...categories, newCat])
-
-
-
 
     return (
         <DataContext.Provider value={{purchases, categories}}>
