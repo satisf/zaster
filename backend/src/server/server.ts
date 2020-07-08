@@ -1,6 +1,7 @@
 import express, {ErrorRequestHandler, NextFunction, RequestHandler} from "express";
 import { connect } from "../database/database";
 import {PurchaseModel} from "../database/purchases/purchases.model";
+const sanitize = require("mongo-sanitize")
 const path = require('path');
 
 
@@ -8,7 +9,7 @@ const app = express();
 
 app.use(express.json())
 app.use((req, res, next) => {
-    console.log('incoming: ', req.originalUrl)
+    req.body = sanitize(req.body)
     next()
 });
 

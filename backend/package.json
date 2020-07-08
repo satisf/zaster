@@ -14,6 +14,7 @@
   "dependencies": {
     "cross-env": "^7.0.2",
     "express": "^4.17.1",
+    "mongo-sanitize": "^1.1.0",
     "mongoose": "^5.9.17",
     "typescript": "^3.9.5"
   },
