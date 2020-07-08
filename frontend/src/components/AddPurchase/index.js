@@ -112,6 +112,11 @@ const AddPurchase = () => {
         setCategory(newCat)
     }, [addCategory])
 
+    const  sanitizeString = str => {
+        str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"");
+        return str.trim();
+    }
+
 
     return (
         <div>
@@ -123,7 +128,7 @@ const AddPurchase = () => {
                     type="text"
                     label="Produktname"
                     value={productName}
-                    onChange={(event => setProductName(event.target.value))}/>
+                    onChange={(event => setProductName(sanitizeString(event.target.value)))}/>
                 <TextField
                     name="price"
                     type="number"
@@ -134,7 +139,7 @@ const AddPurchase = () => {
                     label="Kategorie"
                     id="category-select"
                     value={category}
-                    onChange={(event => setCategory(event.target.value))}
+                    onChange={(event => setCategory(sanitizeString(event.target.value)))}
                 >
                     {categories.map((cat) => <MenuItem value={cat} key={cat + 'item'}>{cat}</MenuItem>)}
                     <MenuItem value={NEW_CATEGORY} key={NEW_CATEGORY}>neue Kategorie anlegen</MenuItem>
@@ -144,7 +149,7 @@ const AddPurchase = () => {
                     type="text"
                     label="Laden"
                     value={shopName}
-                    onChange={(event => setShopName(event.target.value))}/>
+                    onChange={(event => setShopName(sanitizeString(event.target.value)))}/>
                 <ButtonGroup color="primary" aria-label="outlined primary button group">
                     {EMOTIONS.map((emo => (<Button onClick={() => emotionClick(emo)} disableElevation={emo.name !== emotion} key={emo.name}>{emo.emoji}</Button>)))}
                 </ButtonGroup>
