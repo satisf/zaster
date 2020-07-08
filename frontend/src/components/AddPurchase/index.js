@@ -1,6 +1,7 @@
-import React, {useContext, useEffect, useState} from "react"
-import {FormControl, TextField, Button, ButtonGroup} from "@material-ui/core"
+import React, {useContext, useEffect, useState, useCallback} from "react"
+import {FormControl, TextField, Button, ButtonGroup, Select, MenuItem} from "@material-ui/core"
 import {Link, useHistory} from 'react-router-dom'
+import {NewCategoryDialog} from "../NewCategoryDialog";
 import {DataContext, DataActions} from '../../provider/DataProvider'
 import happySound from './happySound.mp3'
 import neutralSound from './neutralSound.mp3'
@@ -31,23 +32,25 @@ export const EMOTIONS = [
 const AddPurchase = () => {
 
     const ALLOWED_DISTANCE = 25
-    const data = useContext(DataContext)
-    const dataActions = useContext(DataActions)
+    const NEW_CATEGORY = '___new___category___'
+
+    const {purchases, categories} = useContext(DataContext)
+    const {addPurchase, addCategory} = useContext(DataActions)
 
     const [productName, setProductName] = useState("")
     const [price, setPrice] = useState(0)
-    const [shopName, setShopName] = useState("")
+    const [category, setCategory] = useState('')
+    const [shopName, setShopName] = useState('')
     const [location, setLocation] = useState({})
     const [emotion, setEmotion] = useState('')
-
-
 
     let history = useHistory()
 
     const submitPurchase = () => {
-        dataActions.addPurchase({
+        addPurchase({
                 productName,
                 price,
+                category,
                 emotion,
                 shop: {
                     name: shopName,
@@ -86,7 +89,7 @@ const AddPurchase = () => {
 
     const findShopByLocation = () => {
         if(location.lat && location.lng) {
-            const sortedPurchases = data.map(purchase => {
+            const sortedPurchases = purchases.map(purchase => {
                 const distance = (location.lat && purchase.shop?.location) ?
                     calculateDistance(purchase.shop.location, location) :
                     Number.MAX_SAFE_INTEGER
@@ -104,9 +107,15 @@ const AddPurchase = () => {
         emotion.sound.play()
     }
 
+    const handleNewCategory = useCallback((newCat) => {
+        addCategory(newCat)
+        setCategory(newCat)
+    }, [addCategory])
+
 
     return (
         <div>
+            <NewCategoryDialog isOpen={category === NEW_CATEGORY} categoryCallback={handleNewCategory} />
             <Link to="/"><Button>zurück</Button></Link>
             <FormControl>
                 <TextField
@@ -121,6 +130,15 @@ const AddPurchase = () => {
                     label="Preis"
                     value={price}
                     onChange={(event => setPrice(event.target.value))}/>
+                <Select
+                    label="Kategorie"
+                    id="category-select"
+                    value={category}
+                    onChange={(event => setCategory(event.target.value))}
+                >
+                    {categories.map((cat) => <MenuItem value={cat} key={cat + 'item'}>{cat}</MenuItem>)}
+                    <MenuItem value={NEW_CATEGORY} key={NEW_CATEGORY}>neue Kategorie anlegen</MenuItem>
+                </Select>
                 <TextField
                     name="shopName"
                     type="text"
@@ -128,7 +146,7 @@ const AddPurchase = () => {
                     value={shopName}
                     onChange={(event => setShopName(event.target.value))}/>
                 <ButtonGroup color="primary" aria-label="outlined primary button group">
-                    {EMOTIONS.map((emo => (<Button onClick={() => emotionClick(emo)} disableElevation={emo.name !== emotion}>{emo.emoji}</Button>)))}
+                    {EMOTIONS.map((emo => (<Button onClick={() => emotionClick(emo)} disableElevation={emo.name !== emotion} key={emo.name}>{emo.emoji}</Button>)))}
                 </ButtonGroup>
                     <Button onClick={()=>submitPurchase()}>eintragen</Button>
             </FormControl>

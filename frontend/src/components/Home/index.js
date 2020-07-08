@@ -6,19 +6,20 @@ import {EMOTIONS} from "../AddPurchase";
 
 const Home = () => {
 
-    const data = useContext(DataContext)
+    const {purchases} = useContext(DataContext)
 
     return (
         <div>
             <Link to="/add">
                 <Button>neuen Kauf hinzufügen</Button>
             </Link>
-            {data.map((purchase, idx) => {
+            {purchases.map((purchase, idx) => {
                 return (
                     <Card key={purchase?.productName + idx}>
                         <CardContent>
                             <p>{purchase?.productName && purchase.productName}</p>
                             <p>{purchase?.price && purchase.price}</p>
+                            <p>{purchase?.category && purchase.category}</p>
                             <p>{purchase?.emotion && EMOTIONS.filter(emo => emo.name === purchase.emotion)[0].emoji}</p>
                             <p>{purchase?.shop?.name && purchase.shop.name}</p>
                         </CardContent>

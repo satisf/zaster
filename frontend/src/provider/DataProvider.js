@@ -13,17 +13,25 @@ const fetchData = async () =>{
 
 export const DataProvider = ({children}) => {
 
-    const [data, setData] = useState([])
+    const [purchases, setPurchases] = useState([])
+    const [categories, setCategories] = useState([])
 
     useEffect(() => {
             fetchData().then(newData => {
-                setData(newData)
+                setPurchases(newData)
+                newData.forEach(purchase => {
+                console.log('DP import', purchase)
+                    if(purchase.category && categories.indexOf(purchase.category) < 0){
+
+                        setCategories([...categories, purchase.category])
+                    }
+                })
             })
             // eslint-disable-next-line
         }, [])
 
     const addPurchase = useCallback(async purchase => {
-        setData([...data, purchase])
+        setPurchases([...purchases, purchase])
         fetch('api/purchase', {
             method: 'POST',
             headers: {
@@ -32,14 +40,20 @@ export const DataProvider = ({children}) => {
             },
             body: JSON.stringify(purchase)
         })
-    }, [data])
+    }, [purchases])
+
+    useEffect(() => {
+        console.log('DataProvider: categories', categories)
+    }, [categories])
+
+    const addCategory = newCat => setCategories([...categories, newCat])
 
 
 
 
     return (
-        <DataContext.Provider value={data}>
-            <DataActions.Provider value={{addPurchase}}>
+        <DataContext.Provider value={{purchases, categories}}>
+            <DataActions.Provider value={{addPurchase, addCategory}}>
                 {children}
             </DataActions.Provider>
         </DataContext.Provider>
