@@ -109,7 +109,7 @@ const AddPurchase = () => {
 
     const handleNewCategory = useCallback((newCat) => {
         addCategory(newCat)
-        setCategory(newCat)
+        setCategory(sanitizeString(newCat))
     }, [addCategory])
 
     const  sanitizeString = str => {
