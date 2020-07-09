@@ -97,6 +97,7 @@ const AddPurchase = () => {
             }).sort((a, b) => a.distance - b.distance)
             if(sortedPurchases[0].distance <= ALLOWED_DISTANCE){
                 setShopName(sortedPurchases[0].purchase.shop.name)
+                sortedPurchases[0].purchase.category && setCategory(sortedPurchases[0].purchase.shop.name)
         }
 
         }

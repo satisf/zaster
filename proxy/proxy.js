@@ -1,28 +1,37 @@
-
 'use strict';
-const restify = require('restify');
-const server = restify.createServer();
 
+const fs = require('fs');
+const http = require('http')
+const https = require('https');
 const httpProxy = require('http-proxy');
 const HttpProxyRules = require('http-proxy-rules');
-const proxy = httpProxy.createProxy();
 
-let proxyRules = new HttpProxyRules({
+const options = {
+    key: fs.readFileSync('privkey.pem'),
+    cert: fs.readFileSync('cert.pem')
+};
+
+const proxyRules = new HttpProxyRules({
     rules: {'.*/api': 'http://localhost:5000/api'},
     default: 'http://localhost:5001'
 });
 
-// pre() runs before routing occurs; allowing us to proxy requests to different targets.
-server.pre(function (req, res, next) {
-    // Checks request to see if it matches one of the specified rules
-    let target = proxyRules.match(req);
-    if (target) {
-        return proxy.web(req, res, { "target": target });
+const proxy = httpProxy.createProxy();
+
+http.createServer((req, res) => {
+    let target = proxyRules.match(req)
+    if(target) {
+        return proxy.web(req, res, {
+            target
+        })
     }
-    return next();
-});
+}).listen(80)
 
-
-server.listen(80, function() {
-    console.log('Proxy server started up on port 80');
-});
+https.createServer(options, (req, res) => {
+    let target = proxyRules.match(req)
+    if(target) {
+        return proxy.web(req, res, {
+            target
+        })
+    }
+}).listen(443);
