@@ -18,7 +18,7 @@ const proxyRules = new HttpProxyRules({
 
 const proxy = httpProxy.createProxy();
 
-const httpServer = () => {
+const createHttpServer = () => {
     http.createServer((req, res) => {
         let target = proxyRules.match(req)
         if (target) {
@@ -28,7 +28,7 @@ const httpServer = () => {
         }
     }).listen(80)
 }
-const httpsServer = () => {
+const createHttpsServer = () => {
     https.createServer(options, (req, res) => {
         let target = proxyRules.match(req)
         if (target) {
@@ -40,15 +40,15 @@ const httpsServer = () => {
 }
 
 try {
-    httpServer()
+    createHttpServer()
 } catch (e) {
     console.log(e)
-    httpServer()
+    createHttpServer()
 }
 
 try {
-    httpsServer()
+    createHttpsServer()
 } catch (e) {
     console.log(e)
-    httpsServer()
+    createHttpsServer()
 }
