@@ -19,12 +19,8 @@ const proxyRules = new HttpProxyRules({
 const proxy = httpProxy.createProxy();
 
 http.createServer((req, res) => {
-    let target = proxyRules.match(req)
-    if(target) {
-        return proxy.web(req, res, {
-            target
-        })
-    }
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
 }).listen(80)
 
 https.createServer(options, (req, res) => {
